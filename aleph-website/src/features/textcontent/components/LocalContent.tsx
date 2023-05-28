@@ -2,7 +2,7 @@ import { Container } from "./LocalContent.styled";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { getLocalText } from "../api/getLocalText";
-import { MyLocalContext } from "../../works/contexts/LocalContext";
+import { MyLocalContext } from "../../texts/contexts/LocalContext";
 
 export const LocalContent = () => {
   const { setLocalInfo, text } = useContext(MyLocalContext);

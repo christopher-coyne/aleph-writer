@@ -7,7 +7,7 @@ import {
   Quote,
   Filters,
 } from "./GlobalContent.styled";
-import { MyContext } from "../../works/contexts/GlobalContext";
+import { MyContext } from "../../texts/contexts/GlobalContext";
 import { useNavigate } from "react-router-dom";
 import { exploreFilters } from "../../../constants";
 import { RadioButton } from "../../../components/Button/RadioButton";
@@ -46,18 +46,7 @@ export const GlobalContent = () => {
             <>
               <h3>{theme.name}</h3>
               <p>{theme.summary}</p>
-              <Quotes>
-                {theme.quotes.map((quote) => (
-                  <li>
-                    <QuoteContainer>
-                      <p>{quote.text}</p>
-                      <p>
-                        Act {quote.act}, Scene {quote.scene}
-                      </p>
-                    </QuoteContainer>
-                  </li>
-                ))}
-              </Quotes>
+              <Quotes></Quotes>
             </>
           ))}
         </ul>

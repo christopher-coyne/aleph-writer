@@ -5,5 +5,5 @@ export const getExploreFilter = ({
 }: {
   filter: string;
 }): Promise<any> => {
-  return axios.get(`/works/123/global-info/${filter}`);
+  return axios.get(`/api/texts/123/local-info/${filter}?subdiv1=5&subdiv2=1`);
 };

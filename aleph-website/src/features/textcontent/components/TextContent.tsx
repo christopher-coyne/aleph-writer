@@ -6,7 +6,7 @@ import React, {
   useContext,
 } from "react";
 import { useLocation } from "react-router-dom";
-import { MyContext } from "../../works/contexts/GlobalContext";
+import { MyContext } from "../../texts/contexts/GlobalContext";
 import { useNavigate } from "react-router-dom";
 import { exploreFilters } from "../../../constants";
 import { RadioButton } from "../../../components/Button/RadioButton";

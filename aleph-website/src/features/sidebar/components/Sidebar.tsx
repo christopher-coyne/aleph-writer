@@ -8,10 +8,10 @@ import {
 import { useState } from "react";
 import { Chat } from "./Chat";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { MyContext } from "../../works/contexts/GlobalContext";
+import { MyContext } from "../../texts/contexts/GlobalContext";
 import { Message } from "../types";
 import { getLocalTextFilterData } from "../api/getLocalTextFilterData";
-import { MyLocalContext } from "../../works/contexts/LocalContext";
+import { MyLocalContext } from "../../texts/contexts/LocalContext";
 import { RadioButtonGroup } from "../../../components/Button/RadioButtonGroup";
 import { filters } from "../../../enums";
 

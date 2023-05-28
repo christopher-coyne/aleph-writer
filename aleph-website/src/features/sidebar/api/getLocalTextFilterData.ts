@@ -13,6 +13,6 @@ export const getLocalTextFilterData = ({
 }: Props): Promise<any> => {
   console.log("getting local text data...");
   return axios.get(
-    `/work/123/local-info/filter/${filter}?subdiv1=${subdiv1}&subdiv2=${subdiv2}`
+    `/api/texts/123/local-info/${filter}?subdiv1=${subdiv1}&subdiv2=${subdiv2}`
   );
 };

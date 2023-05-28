@@ -1,4 +1,4 @@
-import { Works } from "./features/works";
+import { Works } from "./features/texts";
 import { HomePage } from "./features/misc";
 import { Navbar } from "./components";
 import "./App.css";
