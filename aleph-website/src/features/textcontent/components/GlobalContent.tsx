@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, Fragment } from "react";
 import { useLocation } from "react-router-dom";
 import {
   Container,
@@ -43,11 +43,11 @@ export const GlobalContent = () => {
       {explore === "themes" && themes.length && (
         <ul>
           {themes.map((theme) => (
-            <>
+            <Fragment key={theme.name}>
               <h3>{theme.name}</h3>
               <p>{theme.summary}</p>
               <Quotes></Quotes>
-            </>
+            </Fragment>
           ))}
         </ul>
       )}

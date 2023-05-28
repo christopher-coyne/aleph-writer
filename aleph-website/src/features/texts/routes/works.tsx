@@ -84,6 +84,7 @@ const WorksLayout = () => {
 
   console.log("subdiv1 ", subdiv1, "subdiv2 ");
   console.log("subdiv2array ", subdiv2Array);
+
   return (
     <Layout>
       <Content>

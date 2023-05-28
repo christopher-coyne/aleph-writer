@@ -13,6 +13,7 @@ import { Message } from "../types";
 import { getLocalTextFilterData } from "../api/getLocalTextFilterData";
 import { MyLocalContext } from "../../texts/contexts/LocalContext";
 import { RadioButtonGroup } from "../../../components/Button/RadioButtonGroup";
+import { getLocalSummary } from "../api/getLocalSummary";
 import { filters } from "../../../enums";
 
 // works - homepage for all works (books, plays, poetry, lyrics...)
@@ -53,6 +54,20 @@ export const Sidebar = () => {
     }
   }, [subdiv1, subdiv2, filter]);
 
+  useEffect(() => {
+    const refetchLocalSummary = async () => {
+      const { data } = await getLocalSummary({
+        subdiv1,
+        subdiv2,
+      });
+      console.log("theme local ", data);
+      setLocalInfo((prevLocalInfo) => ({ ...prevLocalInfo, summary: data }));
+    };
+    if (view === "local") {
+      refetchLocalSummary();
+    }
+  }, [subdiv1, subdiv2, filter]);
+
   const chapter = query.get("chapter");
   return (
     <Container>
@@ -71,7 +86,7 @@ export const Sidebar = () => {
         {mode === "analysis" ? (
           <>
             <h3>Summary</h3>
-            <p>{!chapter ? "GLOBAL SUMMARY" : summary}</p>
+            <p>{view === "global" ? "GLOBAL SUMMARY" : summary}</p>
             <h3>Explore</h3>
             <RadioButtonGroup />
             {theme && (

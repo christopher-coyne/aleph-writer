@@ -3,6 +3,7 @@ import React, { createContext, useState, useCallback, Context } from "react";
 type LocalInfoType = {
   text: string | undefined;
   theme: { name: string; text: string }[] | undefined;
+  summary: string | undefined;
 };
 
 type LocalContextType = LocalInfoType & {
@@ -16,6 +17,7 @@ type Props = {
 export const MyLocalContext = createContext<LocalContextType>({
   text: undefined,
   theme: [],
+  summary: undefined,
 
   setLocalInfo: ((_: LocalInfoType) => {}) as React.Dispatch<
     React.SetStateAction<LocalInfoType>
@@ -25,6 +27,7 @@ export const LocalContext = ({ children }: Props) => {
   const [localInfo, setLocalInfo] = useState<LocalInfoType>({
     text: "",
     theme: [],
+    summary: "",
   });
 
   return (
