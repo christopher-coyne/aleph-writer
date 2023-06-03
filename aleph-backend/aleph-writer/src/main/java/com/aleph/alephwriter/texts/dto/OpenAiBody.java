@@ -29,4 +29,12 @@ public class OpenAiBody {
         newMsgs[0] = newMsg;
         this.messages = newMsgs;
     }
+
+    public OpenAiBody(String userPrompt) {
+        this.model = "gpt-3.5-turbo";
+        OpenAiMessage[] newMsgs = new OpenAiMessage[1];
+        OpenAiMessage newMsg = new OpenAiMessage("user", userPrompt);
+        newMsgs[0] = newMsg;
+        this.messages = newMsgs;
+    }
 }

@@ -30,3 +30,7 @@ export const ModeButton = styled.button<{ active: boolean }>`
 export const Content = styled.div`
   padding: 20px;
 `;
+
+export const FilterListItem = styled.li<{ selected: boolean }>`
+  ${(props) => props.selected && "border: 2px solid purple"};
+`;

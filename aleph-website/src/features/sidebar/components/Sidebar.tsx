@@ -4,6 +4,7 @@ import {
   ModeButtonContainer,
   ModeButton,
   Content,
+  FilterListItem,
 } from "./Sidebar.styled";
 import { useState } from "react";
 import { Chat } from "./Chat";
@@ -32,12 +33,29 @@ export const Sidebar = () => {
   const subdiv1 = query.get("subdiv1");
   const subdiv2 = query.get("subdiv2");
   const filter = query.get("explore");
-  const focus = query.get("focus");
   const view = query.get("view");
 
   const navigate = useNavigate();
 
-  const { summary } = useContext(MyContext);
+  const { summary, focus } = useContext(MyLocalContext);
+
+  // if focus is changed, grab new focus quotes. Replace quotes with fuzzy matching.
+  /*
+  useEffect(() => {
+    const refetchLocalData = async () => {
+      const { data } = await getLocalTextFilterData({
+        subdiv1,
+        subdiv2,
+        filter,
+      });
+      console.log("theme local ", data);
+      setLocalInfo((prevLocalInfo) => ({ ...prevLocalInfo, theme: data }));
+    };
+    if (view === "local") {
+      refetchLocalData();
+    }
+  }, [focus]); 
+  */
 
   useEffect(() => {
     const refetchLocalData = async () => {
@@ -68,6 +86,8 @@ export const Sidebar = () => {
     }
   }, [subdiv1, subdiv2, filter]);
 
+  console.log("local summary ", summary);
+
   const chapter = query.get("chapter");
   return (
     <Container>
@@ -92,19 +112,26 @@ export const Sidebar = () => {
             {theme && (
               <ul>
                 {theme?.map((theme) => (
-                  <li
+                  <FilterListItem
+                    selected={theme.name === focus}
                     onClick={() => {
-                      if (!focus) {
-                        query.set("focus", theme.name);
+                      if (focus === theme.name) {
+                        setLocalInfo((prevLocalInfo) => ({
+                          ...prevLocalInfo,
+                          focus: undefined,
+                        }));
                       } else {
-                        query.delete("focus");
+                        setLocalInfo((prevLocalInfo) => ({
+                          ...prevLocalInfo,
+                          focus: theme.name,
+                        }));
                       }
                       navigate(`${location.pathname}?${query.toString()}`);
                     }}
                   >
                     <h3>{theme.name} </h3>
                     <p>{theme.text}</p>
-                  </li>
+                  </FilterListItem>
                 ))}
               </ul>
             )}

@@ -6,6 +6,15 @@ type Props = {
   filter: string | null;
 };
 
+/*
+  themes - name + summary
+  devices - name + summary
+  characgters - name + summary. Maybe also relation? (son of xyz...)
+  quotes - name + summary
+  critcisism - name + summary
+  related texts - name + summary
+*/
+
 export const getLocalTextFilterData = ({
   subdiv1,
   subdiv2,

@@ -1,16 +1,24 @@
 package com.aleph.alephwriter.texts.services;
 import com.aleph.alephwriter.texts.dto.OpenAiBody;
 import com.aleph.alephwriter.texts.dto.OpenApiResponse;
+import com.aleph.alephwriter.texts.models.Filter;
+import com.aleph.alephwriter.texts.models.FocusQuote;
+import com.aleph.alephwriter.utils.ReadText;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import org.springframework.http.HttpStatus;
+
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 /*
 WebClient webClient = WebClient.create();
@@ -30,21 +38,43 @@ public class OpenApiService {
         this.restTemplate = new RestTemplate();
     }
 
-    public OpenApiResponse getLocalSummary() {
-        try {
-            /*
-            OpenAiBody myRequest = new OpenAiBody();
-            OpenApiResponse responseEntity = restTemplate.postForObject(url, myRequest, OpenApiResponse.class);
-            */
-            OpenAiBody myRequest = new OpenAiBody();
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                String json = mapper.writeValueAsString(myRequest);
-                System.out.println(json);
-            } catch (JsonProcessingException e) {
-                System.out.println("JSON PROCESS ERROR");
-                e.printStackTrace();
+    public ArrayList<Filter> getLocalFilterInfo(String filter, String subdiv1, String subdiv2) {
+        String text = ReadText.getLocalText(subdiv1, subdiv2);
+        OpenAiBody myRequest = new OpenAiBody("give me 3 examples of " + filter + " in the following text from king lear. Provide them in the following format: name::explanation newline second name::second explanation newline, etc. Only provide the themes in the format I requested. Do not provide any other text \n" + text);
+
+        OpenApiResponse responseEntity = webClient.post()
+                .uri(url)
+                .header("Authorization", "Bearer " + apiKey)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(myRequest)
+                .retrieve()
+                .bodyToMono(OpenApiResponse.class)
+                .block();  // This forces the method to block until the response is received
+
+        // need to return filter info
+        ArrayList<Filter> localFilters = new ArrayList<Filter>();
+        String aiContent = responseEntity.getChoices()[0].getMessage().getContent();
+        System.out.println("ai content " + aiContent);
+        String[] stringFilters = aiContent.split("\n");
+        for (String item : stringFilters) {
+            System.out.println("item" + item);
+            String[] itemSplit = item.split("::");
+            if (itemSplit.length != 2) {
+                continue;
             }
+            System.out.println("item split " + itemSplit[0]);
+            String itemName = itemSplit[0];
+            String itemExplanation = itemSplit[1];
+            localFilters.add(new Filter(itemName, itemExplanation));
+        }
+
+        return localFilters;
+    }
+
+    public String getLocalSummary(String subdiv1, String subdiv2) {
+        try {
+            String text = ReadText.getLocalText(subdiv1, subdiv2);
+            OpenAiBody myRequest = new OpenAiBody("Give me a summary of a few sentences of what is happening in this passage of king lear " + text);
 
             System.out.println("adpi key " + apiKey);
 
@@ -77,7 +107,54 @@ public class OpenApiService {
                      */
                     .bodyToMono(OpenApiResponse.class)
                     .block();  // This forces the method to block until the response is received
-            return responseEntity;
+            return responseEntity.getChoices()[0].getMessage().getContent();
+        } catch(Exception e) {
+            System.out.println("error xyz " + e.toString());
+        }
+        return null;
+    }
+
+    public ArrayList<FocusQuote> getFocusQuotes(String subdiv1, String subdiv2, String focus) {
+        try {
+            String text = ReadText.getLocalText(subdiv1, subdiv2);
+            OpenAiBody myRequest = new OpenAiBody("Give me a list of quotes that exemplify the theme of " + focus + ", from the following text. Provide it in the following format: quote1::explanation newline quote2::explanation, etc." + text);
+
+            System.out.println("adpi key " + apiKey);
+
+            OpenApiResponse responseEntity = webClient.post()
+                    .uri(url)
+                    .header("Authorization", "Bearer " + apiKey)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(myRequest)
+                    .retrieve()
+                    .onStatus(httpStatus -> httpStatus.isError(), clientResponse ->
+                            clientResponse.bodyToMono(String.class)
+                                    .map(errorBody ->
+                                            new RuntimeException(
+                                                    "An error occurred while calling the API. Status code: " + clientResponse.statusCode()
+                                                            + ", Error Body: " + errorBody
+                                            )
+                                    )
+                    )
+                    .bodyToMono(OpenApiResponse.class)
+                    .block();  // This forces the method to block until the response is received
+
+            ArrayList<FocusQuote> focusQuotes= new ArrayList<FocusQuote>();
+            String aiContent = responseEntity.getChoices()[0].getMessage().getContent();
+            System.out.println("ai content " + aiContent);
+            String[] stringFocusQuotes = aiContent.split("\n");
+            for (String item : stringFocusQuotes) {
+                System.out.println("item" + item);
+                String[] itemSplit = item.split("::");
+                if (itemSplit.length != 2) {
+                    continue;
+                }
+                System.out.println("item split " + itemSplit[0]);
+                String itemQuote = itemSplit[0];
+                String itemExplanation = itemSplit[1];
+                focusQuotes.add(new FocusQuote(itemQuote, itemExplanation));
+            }
+            return focusQuotes;
         } catch(Exception e) {
             System.out.println("error xyz " + e.toString());
         }

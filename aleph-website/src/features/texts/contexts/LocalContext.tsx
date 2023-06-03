@@ -4,6 +4,7 @@ type LocalInfoType = {
   text: string | undefined;
   theme: { name: string; text: string }[] | undefined;
   summary: string | undefined;
+  focus: string | undefined;
 };
 
 type LocalContextType = LocalInfoType & {
@@ -18,6 +19,7 @@ export const MyLocalContext = createContext<LocalContextType>({
   text: undefined,
   theme: [],
   summary: undefined,
+  focus: undefined,
 
   setLocalInfo: ((_: LocalInfoType) => {}) as React.Dispatch<
     React.SetStateAction<LocalInfoType>
@@ -28,6 +30,7 @@ export const LocalContext = ({ children }: Props) => {
     text: "",
     theme: [],
     summary: "",
+    focus: undefined,
   });
 
   return (
