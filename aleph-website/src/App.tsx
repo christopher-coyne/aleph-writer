@@ -1,4 +1,5 @@
 import { Works } from "./features/texts";
+import { FuzzyTest } from "./features/test/FuzzyTest";
 import { HomePage } from "./features/misc";
 import { Navbar } from "./components";
 import "./App.css";
@@ -15,6 +16,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/works/:id" element={<Works />} />
+            <Route path="/test" element={<FuzzyTest />} />
           </Routes>
         </Router>
       </div>

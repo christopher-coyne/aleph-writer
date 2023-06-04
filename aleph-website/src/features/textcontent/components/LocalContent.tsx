@@ -19,5 +19,9 @@ export const LocalContent = () => {
     };
     fetchLocalText();
   }, [subdiv1, subdiv2]);
-  return <Container>{text}</Container>;
+  return (
+    <Container>
+      <div dangerouslySetInnerHTML={{ __html: text || "" }} />
+    </Container>
+  );
 };

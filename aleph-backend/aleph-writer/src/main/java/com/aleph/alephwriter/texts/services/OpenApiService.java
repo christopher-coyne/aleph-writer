@@ -78,6 +78,9 @@ public class OpenApiService {
 
             System.out.println("adpi key " + apiKey);
 
+            return "lorem ipsum 123";
+
+            /*
             OpenApiResponse responseEntity = webClient.post()
                     .uri(url)
                     .header("Authorization", "Bearer " + apiKey)
@@ -93,6 +96,8 @@ public class OpenApiService {
                                             )
                                     )
                     )
+
+             */
                     /*
                     .bodyToMono(String.class)
                     .doOnNext(response -> System.out.println("Raw response: " + response))  // Print out the raw response
@@ -105,9 +110,11 @@ public class OpenApiService {
                         }
                     })
                      */
+            /*
                     .bodyToMono(OpenApiResponse.class)
                     .block();  // This forces the method to block until the response is received
             return responseEntity.getChoices()[0].getMessage().getContent();
+            */
         } catch(Exception e) {
             System.out.println("error xyz " + e.toString());
         }
@@ -117,7 +124,7 @@ public class OpenApiService {
     public ArrayList<FocusQuote> getFocusQuotes(String subdiv1, String subdiv2, String focus) {
         try {
             String text = ReadText.getLocalText(subdiv1, subdiv2);
-            OpenAiBody myRequest = new OpenAiBody("Give me a list of quotes that exemplify the theme of " + focus + ", from the following text. Provide it in the following format: quote1::explanation newline quote2::explanation, etc." + text);
+            OpenAiBody myRequest = new OpenAiBody("Give me a list of quotes that exemplify the theme of " + focus + ", from the following text. Provide it in the following format: quote::explanation newline quote::explanation, etc. It must be in the previous format, with the quote from the text followed by two semi colons, and then an explanation" + text);
 
             System.out.println("adpi key " + apiKey);
 
@@ -152,7 +159,7 @@ public class OpenApiService {
                 System.out.println("item split " + itemSplit[0]);
                 String itemQuote = itemSplit[0];
                 String itemExplanation = itemSplit[1];
-                focusQuotes.add(new FocusQuote(itemQuote, itemExplanation));
+                focusQuotes.add(new FocusQuote(itemExplanation, itemQuote));
             }
             return focusQuotes;
         } catch(Exception e) {

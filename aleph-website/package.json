@@ -14,6 +14,8 @@
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
     "axios": "^1.4.0",
+    "fuse.js": "^6.6.2",
+    "fuzzysort": "^2.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.2",

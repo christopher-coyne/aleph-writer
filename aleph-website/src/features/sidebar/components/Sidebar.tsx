@@ -9,13 +9,15 @@ import {
 import { useState } from "react";
 import { Chat } from "./Chat";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { MyContext } from "../../texts/contexts/GlobalContext";
+import { getFocusQuotes } from "../api/getFocusQuotes";
 import { Message } from "../types";
 import { getLocalTextFilterData } from "../api/getLocalTextFilterData";
 import { MyLocalContext } from "../../texts/contexts/LocalContext";
 import { RadioButtonGroup } from "../../../components/Button/RadioButtonGroup";
 import { getLocalSummary } from "../api/getLocalSummary";
+import * as fuzzysort from "fuzzysort";
 import { filters } from "../../../enums";
+import { getMatchingQuote } from "../../test/getMatchingQuote";
 
 // works - homepage for all works (books, plays, poetry, lyrics...)
 // works/hamlet_id - homepage for work - general view of work
@@ -23,7 +25,7 @@ import { filters } from "../../../enums";
 export const Sidebar = () => {
   const [mode, setMode] = useState("analysis");
   const [messages, setMessages] = useState<Message[]>([]);
-  const { setLocalInfo, theme } = useContext(MyLocalContext);
+  const { setLocalInfo, theme, text } = useContext(MyLocalContext);
 
   console.log("theme  ", theme);
 
@@ -37,25 +39,44 @@ export const Sidebar = () => {
 
   const navigate = useNavigate();
 
-  const { summary, focus } = useContext(MyLocalContext);
+  const { summary, focus, focusQuotes } = useContext(MyLocalContext);
+
+  // once focusQuotes is changed, alter the text to add highlighted areas
+  useEffect(() => {
+    if (focusQuotes.length && text) {
+      const replacement = getMatchingQuote(text, focusQuotes);
+      setLocalInfo((prevInfo) => ({ ...prevInfo, text: replacement }));
+    }
+  }, [focusQuotes]);
 
   // if focus is changed, grab new focus quotes. Replace quotes with fuzzy matching.
-  /*
   useEffect(() => {
-    const refetchLocalData = async () => {
-      const { data } = await getLocalTextFilterData({
-        subdiv1,
-        subdiv2,
-        filter,
-      });
-      console.log("theme local ", data);
-      setLocalInfo((prevLocalInfo) => ({ ...prevLocalInfo, theme: data }));
+    const refetchFocusQuotes = async () => {
+      if (focus && view === "local") {
+        const { data } = await getFocusQuotes({
+          subdiv1,
+          subdiv2,
+          focus,
+        });
+        console.log("focus quotes ", data);
+        setLocalInfo((prevLocalInfo) => ({
+          ...prevLocalInfo,
+          focusQuotes: data,
+        }));
+
+        if (data.length) {
+          if (text) {
+            console.log("data for fuzzy ", data[0].text);
+            const result = fuzzysort.single(data[0].text, text);
+            console.log("fuzzy res ", result);
+          }
+        }
+      }
     };
-    if (view === "local") {
-      refetchLocalData();
-    }
-  }, [focus]); 
-  */
+    refetchFocusQuotes();
+  }, [focus]);
+
+  console.log("focus quotes res ", focusQuotes);
 
   useEffect(() => {
     const refetchLocalData = async () => {
@@ -64,7 +85,6 @@ export const Sidebar = () => {
         subdiv2,
         filter,
       });
-      console.log("theme local ", data);
       setLocalInfo((prevLocalInfo) => ({ ...prevLocalInfo, theme: data }));
     };
     if (view === "local") {
@@ -78,7 +98,6 @@ export const Sidebar = () => {
         subdiv1,
         subdiv2,
       });
-      console.log("theme local ", data);
       setLocalInfo((prevLocalInfo) => ({ ...prevLocalInfo, summary: data }));
     };
     if (view === "local") {
@@ -86,9 +105,6 @@ export const Sidebar = () => {
     }
   }, [subdiv1, subdiv2, filter]);
 
-  console.log("local summary ", summary);
-
-  const chapter = query.get("chapter");
   return (
     <Container>
       <ModeButtonContainer>
@@ -135,6 +151,9 @@ export const Sidebar = () => {
                 ))}
               </ul>
             )}
+            {focusQuotes.map((quote) => (
+              <>{quote.text}</>
+            ))}
           </>
         ) : (
           <Chat messages={messages} setMessages={setMessages} />

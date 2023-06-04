@@ -94,7 +94,7 @@ public class TextController {
 
     @GetMapping("/{textId}/local-info/focus-quotes")
     public ResponseEntity<ArrayList<FocusQuote>> getFocusQuotes(@RequestParam(required = false) String subdiv1, @RequestParam(required = false) String subdiv2, @RequestParam(required = false) String focus) {
-
+        System.out.println("getting focus quotes... ");
         // mock data for the time being
         ArrayList<FocusQuote> focusQuotes = openApiService.getFocusQuotes(subdiv1, subdiv2, focus);
 
