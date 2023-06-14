@@ -2,7 +2,7 @@ import React, { createContext, useState, useCallback, Context } from "react";
 
 type FilterType = {
   name: string;
-  summary: string;
+  text: string;
   quotes: { text: string; act: number; scene: number }[];
 };
 
@@ -38,7 +38,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export const MyContext = createContext<GlobalContextType>({
+export const MyGlobalContext = createContext<GlobalContextType>({
   quote: undefined,
   themes: [],
   summary: undefined,
@@ -65,13 +65,13 @@ export const GlobalContext = ({ children }: Props) => {
   });
 
   return (
-    <MyContext.Provider
+    <MyGlobalContext.Provider
       value={{
         ...globalInfo,
         setGlobalInfo,
       }}
     >
       {children}
-    </MyContext.Provider>
+    </MyGlobalContext.Provider>
   );
 };

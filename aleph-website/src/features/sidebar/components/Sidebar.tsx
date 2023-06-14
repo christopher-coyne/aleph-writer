@@ -15,7 +15,9 @@ import { getLocalTextFilterData } from "../api/getLocalTextFilterData";
 import { MyLocalContext } from "../../texts/contexts/LocalContext";
 import { RadioButtonGroup } from "../../../components/Button/RadioButtonGroup";
 import { getLocalSummary } from "../api/getLocalSummary";
+import { GlobalPoints } from "./GlobalPoints";
 import * as fuzzysort from "fuzzysort";
+import { MyGlobalContext } from "../../texts/contexts/GlobalContext";
 import { filters } from "../../../enums";
 import { getMatchingQuote } from "../../test/getMatchingQuote";
 
@@ -40,6 +42,8 @@ export const Sidebar = () => {
   const navigate = useNavigate();
 
   const { summary, focus, focusQuotes } = useContext(MyLocalContext);
+
+  const { summary: globalSummary } = useContext(MyGlobalContext);
 
   // once focusQuotes is changed, alter the text to add highlighted areas
   useEffect(() => {
@@ -105,6 +109,8 @@ export const Sidebar = () => {
     }
   }, [subdiv1, subdiv2, filter]);
 
+  return <div>hello world</div>;
+
   return (
     <Container>
       <ModeButtonContainer>
@@ -122,10 +128,10 @@ export const Sidebar = () => {
         {mode === "analysis" ? (
           <>
             <h3>Summary</h3>
-            <p>{view === "global" ? "GLOBAL SUMMARY" : summary}</p>
+            <p>{view === "global" ? globalSummary : summary}</p>
             <h3>Explore</h3>
             <RadioButtonGroup />
-            {theme && (
+            {theme && view === "local" && (
               <ul>
                 {theme?.map((theme) => (
                   <FilterListItem
@@ -154,6 +160,7 @@ export const Sidebar = () => {
             {focusQuotes.map((quote) => (
               <>{quote.text}</>
             ))}
+            {view === "global" && <GlobalPoints />}
           </>
         ) : (
           <Chat messages={messages} setMessages={setMessages} />

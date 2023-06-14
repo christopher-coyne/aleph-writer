@@ -49,7 +49,7 @@ public class TextController {
         Quote globalQuote = new Quote("“Nothing can come of nothing, speak again. Now, gods, stand up for bastards! To have a thankless child! Thou shouldst not have been old till thou hadst been wise.”", subdivs);
         Subdivision[] subdivisionArray = {new Subdivision("", 4), new Subdivision("", 4)};
         Subdivisions globalSubdivisions = new Subdivisions("act", "scene", subdivisionArray);
-        GlobalInfo global = new GlobalInfo( "At urna condimentum mattis pellentesque id nibh tortor id aliquet. Id aliquet risus feugiat in. Congue quisque egestas diam in arcu cursus euismod. Lorem ipsum dolor sit amet consectetur adipiscing elit duis. Volutpat ac tincidunt \n At urna condimentum mattis pellentesque id nibh tortor id aliquet. Id aliquet risus feugiat in. Congue quisque egestas diam in arcu cursus euismod. Lorem ipsum dolor sit amet consectetur adipiscing elit duis. Volutpat ac tincidunt\n At urna condimentum mattis pellentesque id nibh tortor id aliquet. Id aliquet risus feugiat in. Congue quisque egestas diam in arcu cursus euismod. Lorem ipsum dolor sit amet consectetur adipiscing elit duis. Volutpat ac tincidunt", globalQuote, "1604", "6 acts", "drama", "william shakespeare", globalSubdivisions);
+        GlobalInfo global = new GlobalInfo( "Global Summary - At urna condimentum mattis pellentesque id nibh tortor id aliquet. Id aliquet risus feugiat in. Congue quisque egestas diam in arcu cursus euismod. Lorem ipsum dolor sit amet consectetur adipiscing elit duis. Volutpat ac tincidunt \n At urna condimentum mattis pellentesque id nibh tortor id aliquet. Id aliquet risus feugiat in. Congue quisque egestas diam in arcu cursus euismod. Lorem ipsum dolor sit amet consectetur adipiscing elit duis. Volutpat ac tincidunt\n At urna condimentum mattis pellentesque id nibh tortor id aliquet. Id aliquet risus feugiat in. Congue quisque egestas diam in arcu cursus euismod. Lorem ipsum dolor sit amet consectetur adipiscing elit duis. Volutpat ac tincidunt", globalQuote, "1604", "6 acts", "drama", "william shakespeare", globalSubdivisions);
 
         return ResponseEntity.ok(global);
     }
@@ -102,10 +102,15 @@ public class TextController {
     }
 
     @GetMapping("/{textId}/global-info/{filter}")
-    public ResponseEntity<Filter[]> getFilterGlobalInfo(@PathVariable int textId, @PathVariable String filter) {
+    public ResponseEntity<ArrayList<Filter>> getFilterGlobalInfo(@PathVariable int textId, @PathVariable String filter) {
 
-        Filter[] filterAnswers = {new Filter("Filial Ingratitude", "The theme of filial ingratitude runs throughout the play. Lear expects unconditional love and loyalty from his daughters, but is betrayed by them. The ingratitude displayed by Goneril and Regan reflects the breakdown of the parent-child bond and challenges traditional notions of familial duty.")};
-        return ResponseEntity.ok(filterAnswers);
+        System.out.println("returning...");
+        Filter filterAnswer1 = new Filter("Filial Ingratitude", "The theme of filial ingratitude runs throughout the play. Lear expects unconditional love and loyalty from his daughters, but is betrayed by them. The ingratitude displayed by Goneril and Regan reflects the breakdown of the parent-child bond and challenges traditional notions of familial duty.");
+        Filter filterAnswer2 = new Filter("Filial Ingratitude 2", "The theme of filial ingratitude runs throughout the play. Lear expects unconditional love and loyalty from his daughters, but is betrayed by them. The ingratitude displayed by Goneril and Regan reflects the breakdown of the parent-child bond and challenges traditional notions of familial duty.");
+        ArrayList filters = new ArrayList<Filter>();
+        filters.add(filterAnswer1);
+        filters.add(filterAnswer2);
+        return ResponseEntity.ok(filters);
     }
 
     @GetMapping("/test")

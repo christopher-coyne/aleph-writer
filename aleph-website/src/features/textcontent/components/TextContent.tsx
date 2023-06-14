@@ -6,7 +6,7 @@ import React, {
   useContext,
 } from "react";
 import { useLocation } from "react-router-dom";
-import { MyContext } from "../../texts/contexts/GlobalContext";
+import { MyGlobalContext } from "../../texts/contexts/GlobalContext";
 import { useNavigate } from "react-router-dom";
 import { exploreFilters } from "../../../constants";
 import { RadioButton } from "../../../components/Button/RadioButton";
@@ -19,7 +19,6 @@ import { LocalContent } from "./LocalContent";
 export const TextContent: React.FC = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
-  const navigate = useNavigate();
 
   const view = query.get("view"); // Replace 'param1' with your actual parameter name
   const explore = query.get("explore");

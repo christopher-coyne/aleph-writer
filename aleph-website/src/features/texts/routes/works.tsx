@@ -6,9 +6,10 @@ import { Sidebar } from "../../sidebar/components/Sidebar";
 import { TextContent } from "../../textcontent/components/TextContent";
 import { GlobalContext } from "../contexts/GlobalContext";
 import { getGlobalWorkInfo } from "../api/getGlobalWorkInfo";
-import { MyContext } from "../contexts/GlobalContext";
+import { MyGlobalContext } from "../contexts/GlobalContext";
 import { getExploreFilter } from "../api/getExploreFilter";
 import { Button } from "../../../components/Button/styled.button";
+import { SpecialButton } from "./works.styled";
 import { LocalContext } from "../contexts/LocalContext";
 
 // works - homepage for all works (books, plays, poetry, lyrics...)
@@ -28,7 +29,7 @@ export const Works = () => {
 const WorksLayout = () => {
   // let { id } = useParams();
   // console.log("param ", id);
-  const { setGlobalInfo, subdivisions } = useContext(MyContext);
+  const { setGlobalInfo, subdivisions } = useContext(MyGlobalContext);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const explore = searchParams.get("explore");
@@ -46,8 +47,8 @@ const WorksLayout = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const { data } = await getGlobalWorkInfo({ id: "123" });
-      console.log("data ");
+      const { data } = await getGlobalWorkInfo("123");
+      console.log("global data ", data);
       setGlobalInfo((prevGlobalInfo) => ({
         ...prevGlobalInfo,
         quote: data.quote,
@@ -63,6 +64,7 @@ const WorksLayout = () => {
     const fetchFilterData = async () => {
       if (explore === "themes") {
         const { data } = await getExploreFilter({ filter: explore });
+        console.log("global themes ", data);
         setGlobalInfo((prevGlobalInfo) => ({
           ...prevGlobalInfo,
           themes: data,
@@ -91,7 +93,7 @@ const WorksLayout = () => {
         <Header>
           <h1>King Lear</h1>
           <div>
-            <Button
+            <SpecialButton
               onClick={() => {
                 if (view === "local") {
                   searchParams.set("view", "global");
@@ -107,8 +109,8 @@ const WorksLayout = () => {
                 setSearchParams(searchParams);
               }}
             >
-              Global
-            </Button>
+              {view === "local" ? "Global View" : "View Text"}
+            </SpecialButton>
             <select
               value={subdiv1 || "1"}
               onChange={(e) => handleSubdivChange(e, "subdiv1")}

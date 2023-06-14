@@ -45,3 +45,17 @@ export const Header = styled.div`
 `;
 
 export const Sidebar = styled.div``;
+
+export const SpecialButton = styled.button`
+  border: none;
+  background: linear-gradient(90deg, #844dba 0%, #910a7b 97.84%);
+  border-radius: 50px;
+  padding: 10px 23px;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;

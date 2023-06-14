@@ -2,7 +2,9 @@ import styled from "styled-components";
 
 export const Container = styled.div``;
 
-export const GlobalContainer = styled.div``;
+export const GlobalContainer = styled.div`
+  border: 1px solid red;
+`;
 
 export const Filters = styled.ul`
   display: block;
@@ -20,6 +22,7 @@ export const Quote = styled.p`
   background-color: ${(props) => props.theme.color.primary.l2};
   padding: 10px;
   border-radius: 6px;
+  margin: 2vw 0vw;
 `;
 
 export const QuoteContainer = styled.div`
@@ -41,4 +44,11 @@ export const Quotes = styled.ul`
   & li {
     padding: 10px 0px;
   }
+`;
+
+export const ExploreList = styled.ul`
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 `;
