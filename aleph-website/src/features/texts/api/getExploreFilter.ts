@@ -19,7 +19,7 @@ type UseCommentsOptions = {
 
 export const useFilter = ({ filter, config }: UseCommentsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ["filter", filter],
+    queryKey: ["global" + filter, filter],
     queryFn: () => getExploreFilter({ filter }),
     ...config,
   });

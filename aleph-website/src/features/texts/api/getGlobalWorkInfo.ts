@@ -9,7 +9,7 @@ type UseGetGlobalInfoOptions = {
   workId: string;
 };
 
-export const useGetGlobalInfo = ({ workId }: UseGetGlobalInfoOptions) => {
+export const useGlobalInfo = ({ workId }: UseGetGlobalInfoOptions) => {
   // const { data, error, isLoading, isError } = useQuery('userInfo', fetchUserInfo);
 
   return useQuery({

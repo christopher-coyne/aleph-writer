@@ -1,12 +1,18 @@
 import { Points, Point } from "./GlobalPoints.styled";
+import { useGlobalInfo } from "../../texts/api/getGlobalWorkInfo";
 
 export const GlobalPoints = () => {
+  const { data, isLoading, isError } = useGlobalInfo({ workId: "123" });
+
+  console.log("global info data DOWN ", data);
+
+  console.log("data in global points ", data);
   return (
     <Points>
-      <Point>Written: in 1604</Point>
-      <Point>Author: William Shakespeare</Point>
-      <Point>Length: 4 Acts</Point>
-      <Point>Genre: Drama</Point>
+      <Point>Written: {data?.data.written}</Point>
+      <Point>Author: {data?.data.author}</Point>
+      <Point>Length: {data?.data.length}</Point>
+      <Point>Genre: {data?.data.genre}</Point>
     </Points>
   );
 };

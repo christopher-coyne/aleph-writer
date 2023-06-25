@@ -5,13 +5,14 @@ import { useLocation } from "react-router-dom";
 import { Sidebar } from "../../sidebar/components/Sidebar";
 import { TextContent } from "../../textcontent/components/TextContent";
 import { GlobalContext } from "../contexts/GlobalContext";
-import { getGlobalWorkInfo } from "../api/getGlobalWorkInfo";
+import { getGlobalWorkInfo, useGlobalInfo } from "../api/getGlobalWorkInfo";
 import { MyGlobalContext } from "../contexts/GlobalContext";
 import { getExploreFilter } from "../api/getExploreFilter";
 import { Button } from "../../../components/Button/styled.button";
 import { SpecialButton } from "./works.styled";
 import { LocalContext } from "../contexts/LocalContext";
 import { useFilter } from "../api/getExploreFilter";
+import { Spinner } from "../../../components/Loading/Spinner";
 
 // works - homepage for all works (books, plays, poetry, lyrics...)
 // works/hamlet_id - homepage for work - general view of work
@@ -40,9 +41,13 @@ const WorksLayout = () => {
   const subdiv2 = searchParams.get("subdiv2");
 
   const [isEnabled, setIsEnabled] = useState(false);
+
+  const { data: globalData, isLoading: isGlobalDataLoading } = useGlobalInfo({
+    workId: "123",
+  });
+
   const { data } = useFilter({
     filter: explore || "themes",
-    config: { enabled: isEnabled },
   });
 
   const handleSubdivChange = (
@@ -53,6 +58,7 @@ const WorksLayout = () => {
     setSearchParams(searchParams);
   };
 
+  /*
   useEffect(() => {
     if (explore && data) {
       console.log("resetting... ", explore);
@@ -65,56 +71,25 @@ const WorksLayout = () => {
       }));
     }
   }, [data]);
-
-  useEffect(() => {
-    const getData = async () => {
-      const { data } = await getGlobalWorkInfo("123");
-      console.log("global data ", data);
-      setGlobalInfo((prevGlobalInfo) => ({
-        ...prevGlobalInfo,
-        quote: data.quote,
-        summary: data.summary,
-        subdivisions: data.subdivisions,
-      }));
-    };
-    getData();
-  }, []);
-
-  // get data for whatever filter it currently is
-  useEffect(() => {
-    const fetchFilterData = async () => {
-      if (explore) {
-        setIsEnabled(true);
-        /*
-        const { data } = await getExploreFilter({ filter: explore });
-        console.log("setting... ", explore, " with data : ", data);
-        setGlobalInfo((prevGlobalInfo) => ({
-          ...prevGlobalInfo,
-          globalFilters: {
-            ...prevGlobalInfo.globalFilters,
-            [explore]: data,
-          },
-        }));
-        */
-      }
-    };
-    fetchFilterData();
-  }, [explore]);
+  */
 
   // creates array from 1 to n of all subdivisons of subdivision e.g. scenes of a play
-  const subdiv2Array = Array.from(
-    {
-      length: subdivisions
-        ? subdivisions.divisions[parseInt(subdiv1 || "1") - 1].div2 || 0
-        : 0,
-    },
-    (_, index) => index + 1
-  );
+  let subdiv2Array: number[] = [];
+  if (globalData) {
+    subdiv2Array = Array.from(
+      {
+        length: globalData.data.subdivisions
+          ? globalData.data.subdivisions.divisions[parseInt(subdiv1 || "1") - 1]
+              .div2 || 0
+          : 0,
+      },
+      (_, index) => index + 1
+    );
+  }
 
-  console.log("subdiv1 ", subdiv1, "subdiv2 ");
-
-  console.log("subdiv2array ", subdiv2Array);
-
+  if (isGlobalDataLoading) {
+    return <Spinner height={200} />;
+  }
   return (
     <Layout>
       <Content>
@@ -145,9 +120,11 @@ const WorksLayout = () => {
                   value={subdiv1 || "1"}
                   onChange={(e) => handleSubdivChange(e, "subdiv1")}
                 >
-                  {subdivisions?.divisions.map((_, idx) => (
-                    <option value={idx + 1}>Act {idx + 1}</option>
-                  ))}
+                  {globalData.data.subdivisions?.divisions.map(
+                    (_: number, idx: number) => (
+                      <option value={idx + 1}>Act {idx + 1}</option>
+                    )
+                  )}
                 </select>
                 <select
                   value={subdiv2 || "1"}

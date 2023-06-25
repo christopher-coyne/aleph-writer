@@ -59,7 +59,12 @@ public class TextController {
 
         // get local filter info for
         // mock data for the time being
-        ArrayList<Filter> filters = openApiService.getLocalFilterInfo(filter, subdiv1, subdiv2);
+        // ArrayList<Filter> filters = openApiService.getLocalFilterInfo(filter, subdiv1, subdiv2);
+        ArrayList<Filter> filters = new ArrayList<Filter>();
+        Filter filter1 = new Filter("Filter 1", "The theme of filial ingratitude runs throughout the play.");
+        Filter filter2 = new Filter("Filter 2", "The theme of filial ingratitude runs throughout the play.");
+        filters.add(filter1);
+        filters.add(filter2);
         // Filter[] filterAnswers = {new Filter("Filial Ingratitude", "The theme of filial ingratitude runs throughout the play. Lear expects unconditional love and loyalty from his daughters, but is betrayed by them. The ingratitude displayed by Goneril and Regan reflects the breakdown of the parent-child bond and challenges traditional notions of familial duty.")};
         return ResponseEntity.ok(filters);
     }

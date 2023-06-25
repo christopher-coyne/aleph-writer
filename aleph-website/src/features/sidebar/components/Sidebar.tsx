@@ -11,15 +11,16 @@ import { Chat } from "./Chat";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { getFocusQuotes } from "../api/getFocusQuotes";
 import { Message } from "../types";
-import { getLocalTextFilterData } from "../api/getLocalTextFilterData";
+import { useLocalTextFilterData } from "../api/getLocalTextFilterData";
 import { MyLocalContext } from "../../texts/contexts/LocalContext";
 import { RadioButtonGroup } from "../../../components/Button/RadioButtonGroup";
-import { getLocalSummary } from "../api/getLocalSummary";
+import { getLocalSummary, useLocalSummary } from "../api/getLocalSummary";
 import { GlobalPoints } from "./GlobalPoints";
 import * as fuzzysort from "fuzzysort";
 import { MyGlobalContext } from "../../texts/contexts/GlobalContext";
 import { filters } from "../../../enums";
 import { getMatchingQuote } from "../../test/getMatchingQuote";
+import { useGlobalInfo } from "../../texts/api/getGlobalWorkInfo";
 
 // works - homepage for all works (books, plays, poetry, lyrics...)
 // works/hamlet_id - homepage for work - general view of work
@@ -28,6 +29,8 @@ export const Sidebar = () => {
   const [mode, setMode] = useState("analysis");
   const [messages, setMessages] = useState<Message[]>([]);
   const { setLocalInfo, theme, text } = useContext(MyLocalContext);
+
+  const { data, isLoading, isError } = useGlobalInfo({ workId: "123" });
 
   console.log("theme  ", theme);
 
@@ -41,9 +44,22 @@ export const Sidebar = () => {
 
   const navigate = useNavigate();
 
+  const { data: globalInfoData } = useGlobalInfo({ workId: "123" });
+
   const { summary, focus, focusQuotes } = useContext(MyLocalContext);
 
-  const { summary: globalSummary } = useContext(MyGlobalContext);
+  const { data: localTextFilterData } = useLocalTextFilterData({
+    workId: "123",
+    subdiv1,
+    subdiv2,
+    filter,
+  });
+
+  const { data: localSummary } = useLocalSummary({
+    workId: "123",
+    subdiv1,
+    subdiv2,
+  });
 
   // once focusQuotes is changed, alter the text to add highlighted areas
   useEffect(() => {
@@ -80,36 +96,7 @@ export const Sidebar = () => {
     refetchFocusQuotes();
   }, [focus]);
 
-  console.log("focus quotes res ", focusQuotes);
-
-  useEffect(() => {
-    const refetchLocalData = async () => {
-      const { data } = await getLocalTextFilterData({
-        subdiv1,
-        subdiv2,
-        filter,
-      });
-      setLocalInfo((prevLocalInfo) => ({ ...prevLocalInfo, theme: data }));
-    };
-    if (view === "local") {
-      refetchLocalData();
-    }
-  }, [subdiv1, subdiv2, filter]);
-
-  useEffect(() => {
-    const refetchLocalSummary = async () => {
-      const { data } = await getLocalSummary({
-        subdiv1,
-        subdiv2,
-      });
-      setLocalInfo((prevLocalInfo) => ({ ...prevLocalInfo, summary: data }));
-    };
-    if (view === "local") {
-      refetchLocalSummary();
-    }
-  }, [subdiv1, subdiv2, filter]);
-
-  return <div>hello world</div>;
+  console.log("local text filter ", localTextFilterData);
 
   return (
     <Container>
@@ -128,26 +115,19 @@ export const Sidebar = () => {
         {mode === "analysis" ? (
           <>
             <h3>Summary</h3>
-            <p>{view === "global" ? globalSummary : summary}</p>
+            <p>
+              {view === "global"
+                ? globalInfoData.data.summary
+                : localSummary?.data}
+            </p>
             <h3>Explore</h3>
             <RadioButtonGroup />
-            {theme && view === "local" && (
+            {localTextFilterData && view === "local" && (
               <ul>
-                {theme?.map((theme) => (
+                {localTextFilterData.data.map((theme: any) => (
                   <FilterListItem
                     selected={theme.name === focus}
                     onClick={() => {
-                      if (focus === theme.name) {
-                        setLocalInfo((prevLocalInfo) => ({
-                          ...prevLocalInfo,
-                          focus: undefined,
-                        }));
-                      } else {
-                        setLocalInfo((prevLocalInfo) => ({
-                          ...prevLocalInfo,
-                          focus: theme.name,
-                        }));
-                      }
                       navigate(`${location.pathname}?${query.toString()}`);
                     }}
                   >
