@@ -36,7 +36,7 @@ export const Sidebar = () => {
   const query = new URLSearchParams(location.search);
   const subdiv1 = query.get("subdiv1");
   const subdiv2 = query.get("subdiv2");
-  const filter = query.get("explore");
+  const filter = query.get("filter");
   const view = query.get("view");
 
   const navigate = useNavigate();

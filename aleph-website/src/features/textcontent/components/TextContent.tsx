@@ -21,7 +21,7 @@ export const TextContent: React.FC = () => {
   const query = new URLSearchParams(location.search);
 
   const view = query.get("view"); // Replace 'param1' with your actual parameter name
-  const explore = query.get("explore");
+  const explore = query.get("filter");
 
   useEffect(() => {
     const fetchFilterData = async () => {

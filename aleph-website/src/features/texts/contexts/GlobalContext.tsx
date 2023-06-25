@@ -15,7 +15,14 @@ type GlobalInfoType = {
         character: "King Lear";
       }
     | undefined;
-  themes: FilterType[];
+  globalFilters: {
+    themes: FilterType[];
+    devices: FilterType[];
+    characters: FilterType[];
+    quotes: FilterType[];
+    criticism: FilterType[];
+    texts: FilterType[];
+  };
   summary: string | undefined;
   written: string | undefined;
   author: string | undefined;
@@ -40,7 +47,14 @@ type Props = {
 
 export const MyGlobalContext = createContext<GlobalContextType>({
   quote: undefined,
-  themes: [],
+  globalFilters: {
+    themes: [],
+    devices: [],
+    characters: [],
+    quotes: [],
+    criticism: [],
+    texts: [],
+  },
   summary: undefined,
   written: undefined,
   author: undefined,
@@ -55,7 +69,14 @@ export const MyGlobalContext = createContext<GlobalContextType>({
 export const GlobalContext = ({ children }: Props) => {
   const [globalInfo, setGlobalInfo] = useState<GlobalInfoType>({
     quote: undefined,
-    themes: [],
+    globalFilters: {
+      themes: [],
+      devices: [],
+      characters: [],
+      quotes: [],
+      criticism: [],
+      texts: [],
+    },
     summary: undefined,
     written: undefined,
     author: undefined,

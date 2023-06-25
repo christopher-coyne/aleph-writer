@@ -104,12 +104,22 @@ public class TextController {
     @GetMapping("/{textId}/global-info/{filter}")
     public ResponseEntity<ArrayList<Filter>> getFilterGlobalInfo(@PathVariable int textId, @PathVariable String filter) {
 
-        System.out.println("returning...");
-        Filter filterAnswer1 = new Filter("Filial Ingratitude", "The theme of filial ingratitude runs throughout the play. Lear expects unconditional love and loyalty from his daughters, but is betrayed by them. The ingratitude displayed by Goneril and Regan reflects the breakdown of the parent-child bond and challenges traditional notions of familial duty.");
-        Filter filterAnswer2 = new Filter("Filial Ingratitude 2", "The theme of filial ingratitude runs throughout the play. Lear expects unconditional love and loyalty from his daughters, but is betrayed by them. The ingratitude displayed by Goneril and Regan reflects the breakdown of the parent-child bond and challenges traditional notions of familial duty.");
         ArrayList filters = new ArrayList<Filter>();
-        filters.add(filterAnswer1);
-        filters.add(filterAnswer2);
+        if (filter != null) {
+            System.out.println("filter " + filter);
+        }
+        if (filter.equals("themes")) {
+            System.out.println("returning...");
+            Filter filterAnswer1 = new Filter("Filial Ingratitude", "The theme of filial ingratitude runs throughout the play. Lear expects unconditional love and loyalty from his daughters, but is betrayed by them. The ingratitude displayed by Goneril and Regan reflects the breakdown of the parent-child bond and challenges traditional notions of familial duty.");
+            Filter filterAnswer2 = new Filter("Filial Ingratitude 2", "The theme of filial ingratitude runs throughout the play. Lear expects unconditional love and loyalty from his daughters, but is betrayed by them. The ingratitude displayed by Goneril and Regan reflects the breakdown of the parent-child bond and challenges traditional notions of familial duty.");
+            filters.add(filterAnswer1);
+            filters.add(filterAnswer2);
+        } else {
+            Filter filterAnswer1 = new Filter("NON THEMES", "The theme of filial ingratitude runs throughout the play. Lear expects unconditional love and loyalty from his daughters, but is betrayed by them. The ingratitude displayed by Goneril and Regan reflects the breakdown of the parent-child bond and challenges traditional notions of familial duty.");
+            Filter filterAnswer2 = new Filter("NON THEMES 2", "The theme of filial ingratitude runs throughout the play. Lear expects unconditional love and loyalty from his daughters, but is betrayed by them. The ingratitude displayed by Goneril and Regan reflects the breakdown of the parent-child bond and challenges traditional notions of familial duty.");
+            filters.add(filterAnswer1);
+            filters.add(filterAnswer2);
+        }
         return ResponseEntity.ok(filters);
     }
 

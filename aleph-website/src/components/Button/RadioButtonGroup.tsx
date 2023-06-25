@@ -8,21 +8,21 @@ import { filters } from "../../enums";
 // radio buttons for changing filters
 export const RadioButtonGroup = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const urlFilter = searchParams.get("explore");
+  const urlFilter = searchParams.get("filter");
 
   return (
     <Filters>
       {filters.map((filter) => (
         <li
           onClick={() => {
-            searchParams.set("explore", filter.val);
+            searchParams.set("filter", filter.val);
             setSearchParams(searchParams);
           }}
           key={filter.val}
         >
           <RadioButton
             name={filter.title}
-            title={filter.val}
+            title={filter.title}
             isChecked={urlFilter === filter.val ? 1 : 0}
           />
         </li>

@@ -70,6 +70,6 @@ export const Filters = styled.ul`
     display: inline-block;
     position: relative;
     padding: 0px;
-    margin: 0px 7px;
+    margin: 3px 7px;
   }
 `;

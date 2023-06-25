@@ -1,4 +1,4 @@
-import { useContext, useEffect, ChangeEvent } from "react";
+import { useContext, useEffect, ChangeEvent, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Layout, Content, Header } from "./works.styled";
 import { useLocation } from "react-router-dom";
@@ -11,6 +11,7 @@ import { getExploreFilter } from "../api/getExploreFilter";
 import { Button } from "../../../components/Button/styled.button";
 import { SpecialButton } from "./works.styled";
 import { LocalContext } from "../contexts/LocalContext";
+import { useFilter } from "../api/getExploreFilter";
 
 // works - homepage for all works (books, plays, poetry, lyrics...)
 // works/hamlet_id - homepage for work - general view of work
@@ -29,13 +30,20 @@ export const Works = () => {
 const WorksLayout = () => {
   // let { id } = useParams();
   // console.log("param ", id);
-  const { setGlobalInfo, subdivisions } = useContext(MyGlobalContext);
+  const { setGlobalInfo, globalFilters, subdivisions } =
+    useContext(MyGlobalContext);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const explore = searchParams.get("explore");
+  const explore = searchParams.get("filter");
   const view = searchParams.get("view");
   const subdiv1 = searchParams.get("subdiv1");
   const subdiv2 = searchParams.get("subdiv2");
+
+  const [isEnabled, setIsEnabled] = useState(false);
+  const { data } = useFilter({
+    filter: explore || "themes",
+    config: { enabled: isEnabled },
+  });
 
   const handleSubdivChange = (
     event: ChangeEvent<HTMLSelectElement>,
@@ -44,6 +52,19 @@ const WorksLayout = () => {
     searchParams.set(subdiv, event.target.value);
     setSearchParams(searchParams);
   };
+
+  useEffect(() => {
+    if (explore && data) {
+      console.log("resetting... ", explore);
+      setGlobalInfo((prevGlobalInfo) => ({
+        ...prevGlobalInfo,
+        globalFilters: {
+          ...prevGlobalInfo.globalFilters,
+          [explore]: data.data,
+        },
+      }));
+    }
+  }, [data]);
 
   useEffect(() => {
     const getData = async () => {
@@ -62,13 +83,19 @@ const WorksLayout = () => {
   // get data for whatever filter it currently is
   useEffect(() => {
     const fetchFilterData = async () => {
-      if (explore === "themes") {
+      if (explore) {
+        setIsEnabled(true);
+        /*
         const { data } = await getExploreFilter({ filter: explore });
-        console.log("global themes ", data);
+        console.log("setting... ", explore, " with data : ", data);
         setGlobalInfo((prevGlobalInfo) => ({
           ...prevGlobalInfo,
-          themes: data,
+          globalFilters: {
+            ...prevGlobalInfo.globalFilters,
+            [explore]: data,
+          },
         }));
+        */
       }
     };
     fetchFilterData();
@@ -85,6 +112,7 @@ const WorksLayout = () => {
   );
 
   console.log("subdiv1 ", subdiv1, "subdiv2 ");
+
   console.log("subdiv2array ", subdiv2Array);
 
   return (
@@ -111,22 +139,26 @@ const WorksLayout = () => {
             >
               {view === "local" ? "Global View" : "View Text"}
             </SpecialButton>
-            <select
-              value={subdiv1 || "1"}
-              onChange={(e) => handleSubdivChange(e, "subdiv1")}
-            >
-              {subdivisions?.divisions.map((_, idx) => (
-                <option value={idx + 1}>Act {idx + 1}</option>
-              ))}
-            </select>
-            <select
-              value={subdiv2 || "1"}
-              onChange={(e) => handleSubdivChange(e, "subdiv2")}
-            >
-              {subdiv2Array.map((num) => (
-                <option value={num}>Scene {num}</option>
-              ))}
-            </select>
+            {view === "local" && (
+              <>
+                <select
+                  value={subdiv1 || "1"}
+                  onChange={(e) => handleSubdivChange(e, "subdiv1")}
+                >
+                  {subdivisions?.divisions.map((_, idx) => (
+                    <option value={idx + 1}>Act {idx + 1}</option>
+                  ))}
+                </select>
+                <select
+                  value={subdiv2 || "1"}
+                  onChange={(e) => handleSubdivChange(e, "subdiv2")}
+                >
+                  {subdiv2Array.map((num) => (
+                    <option value={num}>Scene {num}</option>
+                  ))}
+                </select>
+              </>
+            )}
           </div>
         </Header>
         <TextContent />
