@@ -7,6 +7,13 @@ export const theme = {
       d1: "#5C2E88",
       d2: "#270F3F",
     },
+    dark: {
+      background: "black",
+      text: "white",
+    },
+    light: {
+      background: "white",
+      text: "black",
+    },
   },
-  // ...add more theme variables as needed
 };
