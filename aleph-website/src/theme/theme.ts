@@ -1,4 +1,23 @@
 export const theme = {
+  shadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+  borderRadius: {
+    small: "6px",
+    medium: "10px",
+    large: "15px",
+  },
+  spacing: ["0px", "8px", "16px", "24px", "32px", "40px"],
+  fontSizes: {
+    small: "0.8rem",
+    medium: "1rem",
+    large: "1.25rem",
+    xLarge: "1.5rem",
+  },
+  padding: ["2px", "4px", "8px", "12px", "16px", "20px", "24px", "32px"],
+  buttonPadding: {
+    small: "4px 12px",
+    medium: "6px 16px",
+    large: "12px 32px",
+  },
   color: {
     primary: {
       l2: "#F8F2FF",
@@ -10,10 +29,24 @@ export const theme = {
     dark: {
       background: "black",
       text: "white",
+      lx: "black",
+      l2: "#270F3F",
+      l1: "#5C2E88",
+      primary: "#844DBA",
+      d1: "#C092EC",
+      d2: "#F8F2FF",
+      dx: "white",
     },
     light: {
       background: "white",
       text: "black",
+      lx: "white",
+      l2: "#F8F2FF",
+      l1: "#C092EC",
+      primary: "#844DBA",
+      d1: "#5C2E88",
+      d2: "#270F3F",
+      dx: "black",
     },
   },
 };

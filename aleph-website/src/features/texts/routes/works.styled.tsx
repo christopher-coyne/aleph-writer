@@ -15,8 +15,6 @@ export const Layout = styled.div`
 `;
 
 export const Content = styled.div`
-  width: 50%;
-
   & h1 {
     font-family: "bitter";
     font-size: 32px;

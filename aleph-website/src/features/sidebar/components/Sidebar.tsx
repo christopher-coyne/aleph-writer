@@ -120,22 +120,24 @@ export const Sidebar = () => {
                 ? globalInfoData.data.summary
                 : localSummary?.data}
             </p>
-            <h3>Explore</h3>
-            <RadioButtonGroup />
             {localTextFilterData && view === "local" && (
-              <ul>
-                {localTextFilterData.data.map((theme: any) => (
-                  <FilterListItem
-                    selected={theme.name === focus}
-                    onClick={() => {
-                      navigate(`${location.pathname}?${query.toString()}`);
-                    }}
-                  >
-                    <h3>{theme.name} </h3>
-                    <p>{theme.text}</p>
-                  </FilterListItem>
-                ))}
-              </ul>
+              <>
+                <h3>Explore</h3>
+                <RadioButtonGroup />
+                <ul>
+                  {localTextFilterData.data.map((theme: any) => (
+                    <FilterListItem
+                      selected={theme.name === focus}
+                      onClick={() => {
+                        navigate(`${location.pathname}?${query.toString()}`);
+                      }}
+                    >
+                      <h3>{theme.name} </h3>
+                      <p>{theme.text}</p>
+                    </FilterListItem>
+                  ))}
+                </ul>
+              </>
             )}
             {focusQuotes.map((quote) => (
               <>{quote.text}</>

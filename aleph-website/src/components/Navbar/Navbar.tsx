@@ -5,23 +5,28 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon } from "@fortawesome/free-regular-svg-icons";
 import { Button } from "../Button/styled.button";
 import { ThemeContext } from "../../providers/mode";
+import { UL } from "../UL/UL.styled";
 
 export const Navbar = () => {
   const { toggleTheme, darkMode } = useContext(ThemeContext);
   return (
     <Nav darkMode={darkMode}>
       <Logo>Aleph writer</Logo>{" "}
-      <Button onClick={toggleTheme}>
-        <FontAwesomeIcon icon={faMoon} size="lg" />
-      </Button>
-      <ul>
+      <UL spacing={1} direction="row" alignItems="center">
         <li>
-          <LinkButton href="/">Contact</LinkButton>
+          <Button onClick={toggleTheme} color="lx" hover darkMode={darkMode}>
+            <FontAwesomeIcon icon={faMoon} size="lg" color="black" />
+          </Button>
+        </li>
+        <li>
+          <Button outline color="lx" hover darkMode={darkMode}>
+            Login
+          </Button>
         </li>{" "}
         <li>
           <LinkButton href="/">About</LinkButton>
         </li>
-      </ul>
+      </UL>
     </Nav>
   );
 };

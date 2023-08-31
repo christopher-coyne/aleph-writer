@@ -1,13 +1,11 @@
 import { useContext, useEffect, ChangeEvent, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Layout, Content, Header } from "./works.styled";
-import { useLocation } from "react-router-dom";
 import { Sidebar } from "../../sidebar/components/Sidebar";
 import { TextContent } from "../../textcontent/components/TextContent";
 import { GlobalContext } from "../contexts/GlobalContext";
 import { getGlobalWorkInfo, useGlobalInfo } from "../api/getGlobalWorkInfo";
 import { MyGlobalContext } from "../contexts/GlobalContext";
-import { getExploreFilter } from "../api/getExploreFilter";
 import { Button } from "../../../components/Button/styled.button";
 import { SpecialButton } from "./works.styled";
 import { LocalContext } from "../contexts/LocalContext";

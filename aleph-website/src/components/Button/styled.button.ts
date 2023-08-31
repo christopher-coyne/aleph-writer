@@ -1,5 +1,57 @@
 import styled from "styled-components";
 
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  color?: string;
+  darkMode?: string;
+  outline?: boolean;
+  hover?: boolean;
+}
+
+const colorToHover = (theme: any, color?: string, darkMode?: string) => {
+  const declaration = "background-color: ";
+  const newDarkMode = darkMode || "light";
+  if (color === "primary") {
+    return declaration + theme.color[newDarkMode]["d1"];
+  }
+  if (color === "l1") {
+    return declaration + theme.color[newDarkMode]["primary"];
+  }
+  if (color === "l2") {
+    return declaration + theme.color[newDarkMode]["l1"];
+  }
+  if (color === "lx") {
+    return declaration + theme.color[newDarkMode]["l2"];
+  }
+  if (color === "d1") {
+    return declaration + theme.color[newDarkMode]["d2"];
+  }
+  if (color === "d2") {
+    return declaration + theme.color[newDarkMode]["dx"];
+  }
+  if (color === "dx") {
+    return declaration + theme.color[newDarkMode]["d1"];
+  }
+  return declaration + theme.color[newDarkMode]["d2"];
+};
+
+export const Button = styled.button<ButtonProps>`
+  background-color: ${(props) =>
+    props.color && props.darkMode
+      ? props.theme.color[props.darkMode][props.color]
+      : "black"};
+  color: white;
+  border: ${(props) => (props.outline ? "2px solid black" : "none")};
+  border-radius: ${(props) => props.theme.borderRadius.small};
+  padding: ${(props) => props.theme.buttonPadding.small};
+  border: none;
+  font-size: 16px;
+
+  &:hover {
+    cursor: pointer;
+    ${(props) => colorToHover(props.theme, props.color, props.darkMode)};
+  }
+`;
+
 // Link that is styled as a button
 export const LinkButton = styled.a`
   &:hover {
@@ -7,8 +59,8 @@ export const LinkButton = styled.a`
   }
 
   transition: background-color 0.2s ease-in-out; // Adding transition
-  padding: 5px 10px;
-  border-radius: 6px;
+  border-radius: ${(props) => props.theme.borderRadius.small};
+  padding: ${(props) => props.theme.buttonPadding.small};
 `;
 
 /*
@@ -49,19 +101,6 @@ export const RadioLabel = styled.label<{ ischecked: number }>`
   background-color: ${(props) => (props.ischecked ? "black" : "white")};
   border: 1px solid black;
   color: ${(props) => (props.ischecked ? "white" : "black")};
-`;
-
-export const Button = styled.button`
-  background-color: black;
-  color: white;
-  border-radius: 6px;
-  padding: 6px 11px;
-  border: none;
-  font-size: 16px;
-
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 export const Filters = styled.ul`
