@@ -26,21 +26,6 @@ public class TextController {
         this.openApiService = openApiService;
     }
 
-    /*
-    @GetMapping("/{textId}/local-info/{filter}/")
-    public ResponseEntity<GlobalInfo> getTextGlobalInfo(@PathVariable int textId) {
-
-        // mock data for the time being
-        int[] subdivs = {1, 4};
-        Quote globalQuote = new Quote("“Nothing can come of nothing, speak again. Now, gods, stand up for bastards! To have a thankless child! Thou shouldst not have been old till thou hadst been wise.”", subdivs);
-        Subdivision[] subdivisionArray = {new Subdivision("", 4), new Subdivision("", 4)};
-        Subdivisions globalSubdivisions = new Subdivisions("act", "scene", subdivisionArray);
-        GlobalInfo global = new GlobalInfo( "At urna condimentum mattis pellentesque id nibh tortor id aliquet. Id aliquet risus feugiat in. Congue quisque egestas diam in arcu cursus euismod. Lorem ipsum dolor sit amet consectetur adipiscing elit duis. Volutpat ac tincidunt \n At urna condimentum mattis pellentesque id nibh tortor id aliquet. Id aliquet risus feugiat in. Congue quisque egestas diam in arcu cursus euismod. Lorem ipsum dolor sit amet consectetur adipiscing elit duis. Volutpat ac tincidunt\n At urna condimentum mattis pellentesque id nibh tortor id aliquet. Id aliquet risus feugiat in. Congue quisque egestas diam in arcu cursus euismod. Lorem ipsum dolor sit amet consectetur adipiscing elit duis. Volutpat ac tincidunt", globalQuote, "1604", "6 acts", "drama", "william shakespeare", globalSubdivisions);
-
-        return ResponseEntity.ok(global);
-    }
-    */
-
     @GetMapping("/{textId}/global-info")
     public ResponseEntity<GlobalInfo> getTextGlobalInfo(@PathVariable int textId) {
 
@@ -59,12 +44,14 @@ public class TextController {
 
         // get local filter info for
         // mock data for the time being
-        // ArrayList<Filter> filters = openApiService.getLocalFilterInfo(filter, subdiv1, subdiv2);
-        ArrayList<Filter> filters = new ArrayList<Filter>();
+        ArrayList<Filter> filters = openApiService.getLocalFilterInfo(filter, subdiv1, subdiv2);
+
+        /*
         Filter filter1 = new Filter("Filter 1", "The theme of filial ingratitude runs throughout the play.");
         Filter filter2 = new Filter("Filter 2", "The theme of filial ingratitude runs throughout the play.");
         filters.add(filter1);
         filters.add(filter2);
+        */
         // Filter[] filterAnswers = {new Filter("Filial Ingratitude", "The theme of filial ingratitude runs throughout the play. Lear expects unconditional love and loyalty from his daughters, but is betrayed by them. The ingratitude displayed by Goneril and Regan reflects the breakdown of the parent-child bond and challenges traditional notions of familial duty.")};
         return ResponseEntity.ok(filters);
     }

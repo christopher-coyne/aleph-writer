@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /*
 WebClient webClient = WebClient.create();
@@ -40,7 +41,7 @@ public class OpenApiService {
 
     public ArrayList<Filter> getLocalFilterInfo(String filter, String subdiv1, String subdiv2) {
         String text = ReadText.getLocalText(subdiv1, subdiv2);
-        OpenAiBody myRequest = new OpenAiBody("give me 3 examples of " + filter + " in the following text from king lear. Provide them in the following format: name::explanation newline second name::second explanation newline, etc. Only provide the themes in the format I requested. Do not provide any other text \n" + text);
+        OpenAiBody myRequest = new OpenAiBody("list 3 examples of " + filter + " in the following text from king lear. provide the list as an ordered list \n" + text);
 
         OpenApiResponse responseEntity = webClient.post()
                 .uri(url)
@@ -50,22 +51,29 @@ public class OpenApiService {
                 .retrieve()
                 .bodyToMono(OpenApiResponse.class)
                 .block();  // This forces the method to block until the response is received
-
-        // need to return filter info
+        
         ArrayList<Filter> localFilters = new ArrayList<Filter>();
         String aiContent = responseEntity.getChoices()[0].getMessage().getContent();
-        System.out.println("ai content " + aiContent);
-        String[] stringFilters = aiContent.split("\n");
-        for (String item : stringFilters) {
-            System.out.println("item" + item);
-            String[] itemSplit = item.split("::");
-            if (itemSplit.length != 2) {
-                continue;
+        System.out.println("response for local filter " + aiContent);
+        String[] contentBlocks = aiContent.split("\n");
+
+        System.out.println("content " + aiContent);
+
+        for (int i = 0; i < contentBlocks.length; i++) {
+            if (contentBlocks[i].length() >= 2) {
+                // String cleanedBlock = contentBlocks[i].replaceAll("\n", "");
+                System.out.println("adding... "+ contentBlocks[i]);
+                if (Character.isDigit(contentBlocks[i].charAt(0))) {
+                    if (contentBlocks[i].charAt(1) == '.') {
+                        localFilters.add(new Filter("test" + i, contentBlocks[i]));
+                    }
+                }
             }
-            System.out.println("item split " + itemSplit[0]);
-            String itemName = itemSplit[0];
-            String itemExplanation = itemSplit[1];
-            localFilters.add(new Filter(itemName, itemExplanation));
+        }
+
+        System.out.print("full result \n");
+        for (int i = 0; i < localFilters.size(); i++) {
+            System.out.print(localFilters.get(i) + " ");
         }
 
         return localFilters;
@@ -74,13 +82,10 @@ public class OpenApiService {
     public String getLocalSummary(String subdiv1, String subdiv2) {
         try {
             String text = ReadText.getLocalText(subdiv1, subdiv2);
+            return "hello wrold";
+            /*
             OpenAiBody myRequest = new OpenAiBody("Give me a summary of a few sentences of what is happening in this passage of king lear " + text);
 
-            System.out.println("adpi key " + apiKey);
-
-            return "lorem ipsum 123";
-
-            /*
             OpenApiResponse responseEntity = webClient.post()
                     .uri(url)
                     .header("Authorization", "Bearer " + apiKey)
@@ -96,21 +101,6 @@ public class OpenApiService {
                                             )
                                     )
                     )
-
-             */
-                    /*
-                    .bodyToMono(String.class)
-                    .doOnNext(response -> System.out.println("Raw response: " + response))  // Print out the raw response
-                    .map(response -> {  // Then map the response to your OpenApiResponse
-                        try {
-                            return new ObjectMapper().readValue(response, OpenApiResponse.class);
-                        } catch (JsonProcessingException e) {
-                            System.out.println("error skdflsj " + e.getMessage());
-                            throw new RuntimeException("Error parsing response abc", e);
-                        }
-                    })
-                     */
-            /*
                     .bodyToMono(OpenApiResponse.class)
                     .block();  // This forces the method to block until the response is received
             return responseEntity.getChoices()[0].getMessage().getContent();
