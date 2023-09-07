@@ -22,7 +22,5 @@ public class GlobalInfo {
         this.genre = genre;
         this.author = author;
         this.subdivisions = subdivisions;
-    } {
-
     }
 }

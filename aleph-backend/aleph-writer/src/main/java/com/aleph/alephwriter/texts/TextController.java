@@ -4,7 +4,13 @@ import com.aleph.alephwriter.texts.dto.OpenApiResponse;
 import com.aleph.alephwriter.texts.models.*;
 import com.aleph.alephwriter.texts.models.Subdivisions.Subdivision;
 import com.aleph.alephwriter.texts.services.OpenApiService;
+import com.aleph.alephwriter.texts.dao.BookDaoImpl;
 import com.aleph.alephwriter.utils.ReadText;
+
+import jakarta.persistence.EntityManager;
+
+import com.aleph.alephwriter.texts.entities.Book;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,16 +20,31 @@ import org.springframework.util.FileCopyUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/texts")
 @CrossOrigin(origins = "*")
 public class TextController {
     private final OpenApiService openApiService;
+    private final BookDaoImpl bookDaoImpl;
 
     @Autowired
-    TextController(OpenApiService openApiService) {
+    TextController(OpenApiService openApiService, BookDaoImpl bookDaoImpl) {
         this.openApiService = openApiService;
+        this.bookDaoImpl = bookDaoImpl;
+    }
+
+    @GetMapping
+    public ResponseEntity<ArrayList<BookDto>> getBooks() {
+        List<Book> myBooks = this.bookDaoImpl.list();
+        ArrayList<BookDto> booksDto = new ArrayList<BookDto>();
+        for (Book book: myBooks) {
+            BookDto newBook = new BookDto(book.getId(), book.getAuthor());
+            booksDto.add(newBook);
+        }
+
+        return ResponseEntity.ok(booksDto);
     }
 
     @GetMapping("/{textId}/global-info")

@@ -1,13 +1,13 @@
 version: "3.8"
 
 services:
-  web:
-    build: .
-    image: aleph-writer
-    ports:
-      - "8080:8080"
-    depends_on:
-      - database
+  #web:
+  #build: .
+  #image: aleph-writer
+  #ports:
+  #- "8080:8080"
+  #depends_on:
+  #- database
 
   database:
     image: postgres:13
@@ -15,5 +15,7 @@ services:
       POSTGRES_DB: writerdb
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5432:5432"
     volumes:
       - ./db:/docker-entrypoint-initdb.d
